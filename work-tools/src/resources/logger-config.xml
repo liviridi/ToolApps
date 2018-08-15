@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<!--
+		**************************** Appenders ****************************
+	-->
+	<!-- Venus Log Appender -->
+	<appender name="MY_LOG" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="Append" value="true" />
+        <param name="Encoding" value="UTF-8" />
+        <param name="File" value="/Users/yunli/work/test/NGAIA/log/test.log" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} ${hostName} [%t] %-5p %m%n" />
+        </layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="debug" />
+			<param name="LevelMax" value="error" />
+			<param name="AcceptOnMatch" value="true" />
+		</filter>
+    </appender>
+	
+	<!--
+		****************************** loggers ******************************
+	-->
+	<!-- Middleware loggers -->
+	<logger name="java.sql">
+		<level value="warn" />
+	</logger>
+
+	<logger name="org.apache">
+		<level value="warn" />
+	</logger>
+
+	<logger name="STDOUT">
+        <level value="off" />
+    </logger>
+
+	<!-- Foss logger -->
+	<logger name="com.hpe.cms">
+		<level value="debug" />
+	</logger>
+    
+	<!-- Root logger -->
+	<root>
+		<level value="debug" />
+		<appender-ref ref="MY_LOG" />
+	</root>
+
+</log4j:configuration>
