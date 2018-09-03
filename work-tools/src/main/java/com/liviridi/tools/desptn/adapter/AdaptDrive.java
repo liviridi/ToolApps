@@ -6,7 +6,7 @@ import com.liviridi.tools.desptn.strategy.duck.VarietyDucks.NiceDuck;
 
 /**
  * 适配器模式
- * @author liyun
+ * @author ly
  *
  */
 public class AdaptDrive {

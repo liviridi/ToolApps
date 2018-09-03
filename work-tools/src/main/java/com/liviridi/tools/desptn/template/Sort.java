@@ -5,7 +5,7 @@ import java.util.Iterator;
 /**
  * 模板方法模式 java api 的 arrays.sort() java api 中还有 java.io的InputStream的read()类似
  *
- * @author liyun
+ * @author ly
  *
  */
 public class Sort implements Iterator<Object> {

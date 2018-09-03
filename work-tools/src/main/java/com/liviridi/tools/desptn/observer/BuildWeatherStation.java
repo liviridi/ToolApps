@@ -5,7 +5,7 @@ import com.liviridi.tools.desptn.observer.subject.impl.WeatherData;
 
 /**
  * 观察者模式
- * @author liyun
+ * @author ly
  *
  */
 public class BuildWeatherStation {

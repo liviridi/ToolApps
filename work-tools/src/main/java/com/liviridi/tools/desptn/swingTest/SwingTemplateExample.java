@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 
 /**
  * 模板方法 java api 中的实例(Swing)
- * @author liyun
+ * @author ly
  *
  */
 public class SwingTemplateExample extends JFrame {

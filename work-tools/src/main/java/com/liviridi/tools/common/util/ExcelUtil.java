@@ -14,8 +14,6 @@ import com.liviridi.tools.common.log.CommonLogger;
 /**
  * Excelファイル作成、読込用ユーティリティ
  *
- * @author yunli
- * @version 2017-08-25 03:29:40
  */
 public class ExcelUtil {
 

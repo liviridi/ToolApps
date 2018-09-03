@@ -9,7 +9,7 @@ import javax.swing.JFrame;
 
 /**
  * 观察者模式  java api 中的实例(Swing)
- * @author liyun
+ * @author ly
  *
  */
 public class SwingObserverExample {
