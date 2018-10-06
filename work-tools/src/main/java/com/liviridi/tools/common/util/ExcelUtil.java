@@ -9,91 +9,108 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.NumberToTextConverter;
 
-import com.liviridi.tools.common.log.CommonLogger;
-
 /**
- * Excelファイル作成、読込用ユーティリティ
+ * Excel read utility
  *
  */
 public class ExcelUtil {
 
-    /** ログ */
-    private static CommonLogger logger = CommonLogger.getLogger(ExcelUtil.class);
-
     /**
-     * シート内指定されたセールの値を取得
+     * get the value of the cell with the address in this sheet
      *
      * @param sheet
-     *            シート
+     *            excel sheet
      * @param cellAddr
-     *            シート内セールのアドレス
-     * @return セールの値
+     *            cell's excel address(example:AA4)
+     * @return value of the cell
      */
     public static String getCellValue(Sheet sheet, CellAddress cellAddr) {
-        // シートが無い場合、null返却
+        // empty sheet object
         if (sheet == null) {
-            logger.debug("空シートで、nullを返却");
             return null;
         }
-        // アドレスに対する行取得
+        // get row object
         Row row = sheet.getRow(cellAddr.getRow());
-        // 空行の場合、null返却
+        // empty row
         if (row == null) {
-            logger.debug("「" + cellAddr.getRow() + "」行目は空行で、nullを返却");
             return null;
         }
-        // セールを取得
+        // get cell object
         Cell cell = row.getCell(cellAddr.getColumn());
-        // 空セールの場合、null返却
         if (cell == null) {
-            logger.debug("セール「" + cellAddr + "」は空セールで、nullを返却");
             return null;
         }
         String cellResult = null;
-        // セールのタイプに対し、値を取得
+        // get value by cell type
         switch (cell.getCellTypeEnum()) {
-            // 数字、Dateの場合
-            case NUMERIC:
-            case FORMULA: {
-                if (DateUtil.isCellDateFormatted(cell)) {
-                    // Dateの場合
-                    Date date = cell.getDateCellValue();
-                    cellResult = date.toString();
-                } else {
-                    // 数字の場合
-                    cellResult = NumberToTextConverter.toText(cell.getNumericCellValue());
-                }
-                break;
+        case NUMERIC:
+        case FORMULA: {
+            if (DateUtil.isCellDateFormatted(cell)) {
+                // date
+                Date date = cell.getDateCellValue();
+                cellResult = date.toString();
+            } else {
+                // number
+                cellResult = NumberToTextConverter.toText(cell.getNumericCellValue());
             }
-            // 文字列の場合
-            case STRING:
-            case BLANK:
-                cellResult = cell.getRichStringCellValue().getString();
-                break;
-            // boolの場合
-            case BOOLEAN:
-                cellResult = String.valueOf(cell.getBooleanCellValue());
-                break;
-            case ERROR:
-                cellResult = String.valueOf(cell.getErrorCellValue());
-                break;
-            default:
-                break;
+            break;
+        }
+        // string
+        case STRING:
+        case BLANK:
+            cellResult = cell.getRichStringCellValue().getString();
+            break;
+        // boolean
+        case BOOLEAN:
+            cellResult = String.valueOf(cell.getBooleanCellValue());
+            break;
+        case ERROR:
+            cellResult = String.valueOf(cell.getErrorCellValue());
+            break;
+        default:
+            break;
         }
         return cellResult;
     }
 
     /**
-     * シート内指定されたセールの値を取得
+     * get the value of the cell with the address in this sheet
      *
      * @param sheet
-     *            シート
+     *            excel sheet
      * @param cellAddr
-     *            シート内セールのアドレス(example:AA4)
-     * @return セールの値
+     *            cell's excel address(example:AA4)
+     * @return value of the cell
      */
     public static String getCellValue(Sheet sheet, String cellAddr) {
         CellAddress address = new CellAddress(cellAddr);
         return getCellValue(sheet, address);
+    }
+
+    public static String nextRowStr(Sheet sheet, String cellAddr) {
+        CellAddress address = new CellAddress(cellAddr);
+        return nextRowStr(sheet, address);
+    }
+
+    public static String nextRowStr(Sheet sheet, CellAddress cellAddr) {
+        return nextRowAddr(sheet, cellAddr).toString();
+    }
+
+    public static CellAddress nextRowAddr(Sheet sheet, String cellAddr) {
+        return nextRowAddr(sheet, new CellAddress(cellAddr));
+    }
+
+    public static CellAddress nextRowAddr(Sheet sheet, CellAddress cellAddr) {
+        int row = cellAddr.getRow();
+        return new CellAddress(row + 1, cellAddr.getColumn());
+    }
+
+    public static CellAddress nextColAddr(Sheet sheet, String cellAddr) {
+        return nextColAddr(sheet, new CellAddress(cellAddr));
+    }
+
+    public static CellAddress nextColAddr(Sheet sheet, CellAddress cellAddr) {
+        int col = cellAddr.getColumn();
+        return new CellAddress(cellAddr.getRow(), col + 1);
     }
 }
