@@ -54,7 +54,7 @@ public class FindSelectTagMain {
                 System.out.println(i + "行目エラー、メッセージ：" + e.getMessage());
                 System.exit(1);
             }
-            wrtInfo.setFileName(lineInfo.getFilePath().replace("\\", "/").replace("C:/Ver_GAIA1_WorkSpace", ""));
+            wrtInfo.setFileName(lineInfo.getFilePath().replace("\\", "/").replace("C:/WorkSpace", ""));
             wrtInfo.setSearchRes(lineInfo.getSchResult());
             String wholeTag = findCtntInFile(lineInfo);
             wrtInfo.setFoundCtnt(wholeTag);

@@ -44,7 +44,7 @@ public class ElAnlsMain {
 
         FileUtil.writeFile(pathBuf.toString(), resStorePath + "jspPathResult.txt");
 
-        // String pathCtnt = FileUtil.readFileContent(new File("/Users/yunli/work/test/NGAIA/jspResult.txt"), "UTF-8");
+        // String pathCtnt = FileUtil.readFileContent(new File("/Users/yunli/work/test/jjj/jspResult.txt"), "UTF-8");
 
         StringBuffer result = new StringBuffer();
         StringBuffer pathWithBeanWrt = new StringBuffer();

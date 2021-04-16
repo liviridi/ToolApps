@@ -174,7 +174,7 @@ public class FindSetStrArrMain {
         OutputStream os = null;
 
         try {
-            fis = new FileInputStream(new File("/Users/yunli/work/test/NGAIA/水平展開実施結果(artf221579).xlsx"));
+            fis = new FileInputStream(new File("/Users/yunli/work/test/水平展開実施結果(artf221579).xlsx"));
             resBook = new XSSFWorkbook(fis);
             Sheet sheet = resBook.getSheet("artf221579");
             
@@ -204,7 +204,7 @@ public class FindSetStrArrMain {
                 paramCell.setCellValue(wrtInfo.getName());
                 rowIdx++;
             }
-            os = new FileOutputStream(new File("/Users/yunli/work/test/NGAIA/水平展開実施結果(artf221579).xlsx"));
+            os = new FileOutputStream(new File("/Users/yunli/work/test/水平展開実施結果(artf221579).xlsx"));
             os.flush();
             resBook.write(os);
         } finally {

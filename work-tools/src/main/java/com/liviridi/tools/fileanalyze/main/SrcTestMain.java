@@ -10,8 +10,8 @@ import java.io.IOException;
 public class SrcTestMain {
 
     public static void main(String[] args) throws IOException {
-//        File inF = new File("/Users/yunli/work/test/NGAIA/artf221112/insFindResult.txt");
-//        String outPath = "/Users/yunli/work/test/NGAIA/artf221112/uploadTest.txt";
+//        File inF = new File("/Users/yunli/work/test/artf221112/insFindResult.txt");
+//        String outPath = "/Users/yunli/work/test/artf221112/uploadTest.txt";
 //        uploadCsvFile(inF, outPath);
 //        byte[] res = new byte[1024];
 //        FileInputStream is = null;
@@ -58,7 +58,7 @@ public class SrcTestMain {
 //            
 //        }
 //        
-        String path = "C:\\Ver_GAIA1_WorkSpace\\NGN\\NGNOPS\\web\\WEB-INF\\jsp\\aer\\SC_G06.part.aer_pair_search_condition.jsp";
+        String path = "C:\\WorkSpace\\web\\WEB-INF\\jsp\\aer\\SC_G06.part.aer_pair_search_condition.jsp";
         String[] dds = path.replace("\\", "/").split("/");
         System.out.print(dds[dds.length - 1]);
 

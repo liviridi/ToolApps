@@ -47,7 +47,7 @@ public class ChkJSPMain {
 
         CommonLogger.initConfig(SystemConstants.LOG_CONFIG_PATH);
 
-        Document pageXml = getXmlDoc("/Ver_GAIA1_WorkSpace/NGN/Share/conf/common/part/east/page-config.xml");
+        Document pageXml = getXmlDoc("/Share/conf/common/part/east/page-config.xml");
         Element page = getPage("SC_A03_04", pageXml);
         Map<String, String> partsJspMap = createPartJspMap();
 
