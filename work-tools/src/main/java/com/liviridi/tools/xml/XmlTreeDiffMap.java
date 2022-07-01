@@ -19,17 +19,14 @@ public class XmlTreeDiffMap extends XmlTreeMap {
     private boolean isDifferenceDeep = false;
     private boolean differenceChecked = false;
 
-    /** 追加数 */
     private int addedCount = -1;
-    /** 変更数 */
     private int changedCount = -1;
-    /** 削除数 */
     private int deletedCount = -1;
 
-    /** 削除定義体作成用：削除しようとしているフラグ */
+    /** delete mark */
     private boolean toBeDeleted = false;
 
-    /** 削除定義体作成用：削除動作モード */
+    /** delete action */
     private String deleteActionMode = null;
 
     public XmlTreeDiffMap() {
@@ -45,69 +42,41 @@ public class XmlTreeDiffMap extends XmlTreeMap {
         this.destination = destination;
     }
 
-    /**
-     * 差分判定
-     *
-     * @return true:差分あり,false:差分無し
-     */
     public boolean isDifference() {
-        // 自身の値と比較先定義体Mapの値が異なれば、差分ありと判定
         if (this.valueAttr != null && this.destination != null) {
             return this.valueAttr.compareTo(destination.valueAttr) != 0;
         }
-        // 自身の値が無く、かつ比較先定義体Mapの値が無い場合は、差分無しと判定
         if (this.valueAttr == null && this.destination != null && this.destination.valueAttr == null) {
             return false;
         }
-        // 上記以外は差分ありと判定
         return true;
     }
 
-    /**
-     * 削除判定
-     *
-     */
     public boolean isDeleted() {
-        // 自身の値が有り、比較先定義体Mapが無い場合は、削除と判定
         return this.valueAttr != null && destination == null;
     }
 
-    /**
-     * 追加判定
-     *
-     */
     public boolean isAdded() {
-        // 比較先が有り、自身の値が無い場合は、追加と判定
         return destination != null && destination.valueAttr != null && this.valueAttr == null;
     }
 
     /**
-     * 差分種別取得
+     * difference result
      */
     public short getDiffType() {
-        // 追加判定＝追加の場合は「追加」
         if (isAdded()) {
             return ADDED;
         }
-        // 削除判定＝削除の場合は「削除」
         if (isDeleted()) {
             return DELETED;
         }
-        // 差分判定＝差分有りの場合は「変更」
         if (isDifference()) {
             return CHANGED;
         }
-        // 上記以外は「同じ」
         return SAME;
     } 
 
-    /**
-     * 差分判定(階層先を含む)
-     *
-     * @return
-     */
     public boolean isDifferenceDeep() {
-        // 自身の差分有り判定が差分有りなら、差分ありと判定
         if (this.differenceChecked) {
             return this.isDifferenceDeep;
         }
@@ -118,7 +87,6 @@ public class XmlTreeDiffMap extends XmlTreeMap {
             return this.isDifferenceDeep;
         }
 
-        // 差分なしの場合は、自身のMapが持つ差分定義体Mapで、差分判定(階層先を含む)が差分有りのMapがあれば差分有りと判定
         for (XmlCompareKey key : this.keySet()) {
             XmlTreeDiffMap info = (XmlTreeDiffMap) this.get(key);
             if (info.isDifferenceDeep()) {
@@ -131,10 +99,6 @@ public class XmlTreeDiffMap extends XmlTreeMap {
         return this.isDifferenceDeep;
     }
 
-    /**
-     * 追加件数取得
-     *
-     */
     public int getAddedCount() {
         if (this.addedCount >= 0) {
             return this.addedCount;
@@ -148,10 +112,6 @@ public class XmlTreeDiffMap extends XmlTreeMap {
         return this.addedCount;
     }
 
-    /**
-     * 変更件数取得
-     *
-     */
     public int getChangedCount() {
         if (this.changedCount >= 0) {
             return this.changedCount;
@@ -164,10 +124,6 @@ public class XmlTreeDiffMap extends XmlTreeMap {
         return this.changedCount;
     }
 
-    /**
-     * 削除件数取得
-     *
-     */
     public int getDeletedCount() {
         if (this.deletedCount >= 0) {
             return this.deletedCount;
@@ -194,7 +150,7 @@ public class XmlTreeDiffMap extends XmlTreeMap {
     }
 
     /**
-     * 値取得
+     * value attribute
      */
     public String getValueAttr() {
         // 自身の値が無い場合は、比較先定義体Mapの値を返す
@@ -204,9 +160,6 @@ public class XmlTreeDiffMap extends XmlTreeMap {
         return destination != null ? destination.getValueAttr() : null;
     }
 
-    /**
-     * 該当Nodeを削除Nodeとマークする
-     */
     public void markAsDelete(String actionMode) {
         if (!toBeDeleted) {
             toBeDeleted = true;
@@ -221,20 +174,21 @@ public class XmlTreeDiffMap extends XmlTreeMap {
     }
 
     /**
-     * 削除するフラグを返却
+     * to delete mark
      *
-     * @return 削除するフラグ
+     * @return mark
      */
     public boolean isToBeDeleted() {
         return toBeDeleted;
     }
 
     /**
-     * 削除するフラグを返却
+     * delete action
      *
-     * @return 削除するフラグ
+     * @return delete action
      */
     public String getDeleteActionMode() {
         return deleteActionMode;
     }
+
 }

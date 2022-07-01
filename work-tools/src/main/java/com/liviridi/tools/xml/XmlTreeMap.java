@@ -51,6 +51,16 @@ public class XmlTreeMap extends TreeMap<XmlCompareKey, XmlTreeMap> implements Xm
      */
     private Document savedDoc = null;
 
+    /**
+     * current node's parent node map
+     */
+    private XmlTreeMap parentMap = null;
+
+    /**
+     * current node's parent node map
+     */
+    private String xpath = null;
+
     public XmlTreeMap() {
         this.tag = null;
         this.tagAttr = null;
@@ -75,36 +85,42 @@ public class XmlTreeMap extends TreeMap<XmlCompareKey, XmlTreeMap> implements Xm
         return this.savedDoc;
     }
 
+    public void setParentMap(XmlTreeMap parent) {
+        this.parentMap = parent;
+    }
+
+    public XmlTreeMap getParentMap() {
+        return this.parentMap;
+    }
+
+    public void setXpath(String xpath) {
+        this.xpath = xpath;
+    }
+
+    public String getXpath() {
+        return this.xpath;
+    }
+
     /**
-     * 定義体をソートし
+     * compare(only tag and value)
      */
     public int compareTo(XmlCompareKey info) {
         int result;
 
-        //タグを比較。
         if ((result = this.getTag().compareTo(info.getTag())) != 0) {
             return result;
         }
-        // タグが同じ場合は、値を比較。
         if (this.getValueAttr() == null) {
             return info.getValueAttr() == null ? 0 : 1;
         }
-        // 値が無い場合、引数の定義体Mapの値が無い場合は「同じ」、値がある場合は「異なる」とする
         return this.getValueAttr().compareTo(info.getValueAttr());
     }
 
-    /**
-     * 同一タグ定義体取得
-     *
-     * @param tag タグ
-     * @return 定義体
-     */
     public XmlTreeMap[] getSameTagDefinitions(String tag) {
         ArrayList<XmlTreeMap> maps = new ArrayList<XmlTreeMap>();
 
         if (tag != null) {
             for (XmlCompareKey key : this.keySet()) {
-                // 自身のMapからタグが同じものをすべて取得する。
                 XmlTreeMap info = (XmlTreeDiffMap) this.get(key);
                 if (info != null && tag.equals(info.getTag())) {
                     maps.add(info);
@@ -112,6 +128,10 @@ public class XmlTreeMap extends TreeMap<XmlCompareKey, XmlTreeMap> implements Xm
             }
         }
         return maps.toArray(new XmlTreeMap[maps.size()]);
+    }
+
+    public boolean isRootMap() {
+        return savedDoc != null && parentMap == null;
     }
 
     public String getTag() {
@@ -126,25 +146,11 @@ public class XmlTreeMap extends TreeMap<XmlCompareKey, XmlTreeMap> implements Xm
         return this.valueAttr;
     }
 
-    /**
-     * XML形式内容取得
-     *
-     * @return XML内容
-     */
     public String asXml() {
         String xmlHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
         return xmlHeader + FileUtil.LBRK_LF + getNodeXml(this, "");
     }
 
-    /**
-     * 各Node下の各タグのXML内容取得
-     *
-     * @param currentNode
-     *            当前Node
-     * @param tab
-     *            フォーマット用
-     * @return 各タグのXML内容
-     */
     private String getNodeXml(XmlTreeMap currentNode, String lastTab) {
         String tab = "    ";
         StringBuffer xmlBuffer = new StringBuffer();
@@ -197,11 +203,8 @@ public class XmlTreeMap extends TreeMap<XmlCompareKey, XmlTreeMap> implements Xm
     }
 
     /**
-     * XML変換処理
+     * XML node convert into map
      *
-     * @param map 定義体マップ
-     * @param node ノード
-     * @throws Exception 異常
      */
     private static void convert(XmlTreeMap map, Node node) throws Exception {
         XmlTreeMap childKey, childMap;
@@ -214,18 +217,14 @@ public class XmlTreeMap extends TreeMap<XmlCompareKey, XmlTreeMap> implements Xm
                 convert(childMap, nextNode.getFirstChild());
                 map.put(childKey, childMap);
                 childMap.setNode(nextNode);
+                childMap.setParentMap(map);
+                String xpath = (map.isRootMap() ? "" : map.getXpath()) + "." + childMap.getTag();
+                childMap.setXpath(xpath);
             }
             nextNode = nextNode.getNextSibling();
         }
     }
 
-    /**
-     * 定義体マップを作成する
-     *
-     * @param node ノード
-     * @return 定義体マップ
-     * @throws Exception 異常
-     */
     private static XmlTreeMap createDefinitionMap(Node node) throws Exception {
         Node attr;
 
@@ -250,7 +249,6 @@ public class XmlTreeMap extends TreeMap<XmlCompareKey, XmlTreeMap> implements Xm
             }
         }
 
-        // 定義体マップを作成する(タグ、タグ名、値を設定)
         return new XmlTreeMap(tag, tagAttr, valueAttr);
     }
 
@@ -263,5 +261,18 @@ public class XmlTreeMap extends TreeMap<XmlCompareKey, XmlTreeMap> implements Xm
             }
         }
         return super.remove(key);
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer result = new StringBuffer();
+        result.append("{");
+        result.append(tag + ":" + valueAttr + "=");
+        for (XmlCompareKey key : this.keySet()) {
+            XmlTreeMap info = (XmlTreeDiffMap) this.get(key);
+            result.append(info.toString());
+        }
+        result.append("}");
+        return result.toString();
     }
 }
